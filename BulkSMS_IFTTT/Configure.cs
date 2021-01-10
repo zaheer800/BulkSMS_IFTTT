@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
+using System.Diagnostics;
 using System.Drawing;
 using System.IO;
 using System.Linq;
@@ -56,6 +57,8 @@ namespace BulkSMS_IFTTT
         private void btnSave_Click(object sender, EventArgs e)
         {
             SaveEvent();
+            EnableDisableControls(false);
+            MessageBox.Show("Configurations Saved Successfully", "Confirmation", MessageBoxButtons.OK, MessageBoxIcon.Information);
         }
         public void SaveEvent()
         {
@@ -140,6 +143,12 @@ namespace BulkSMS_IFTTT
         private void btnClose_Click(object sender, EventArgs e)
         {
             this.Close();
+        }
+
+        private void lnkLblIFTTT_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+        {
+            ProcessStartInfo sInfo = new ProcessStartInfo("https://ifttt.com/");
+            Process.Start(sInfo);
         }
     }
 }

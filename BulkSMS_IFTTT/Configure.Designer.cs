@@ -29,6 +29,7 @@ namespace BulkSMS_IFTTT
         /// </summary>
         private void InitializeComponent()
         {
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Configure));
             this.groupBox1 = new System.Windows.Forms.GroupBox();
             this.label1 = new System.Windows.Forms.Label();
             this.txtMakerKey = new System.Windows.Forms.TextBox();
@@ -124,6 +125,7 @@ namespace BulkSMS_IFTTT
             this.lnkLblIFTTT.TabIndex = 5;
             this.lnkLblIFTTT.TabStop = true;
             this.lnkLblIFTTT.Text = "IFTTT";
+            this.lnkLblIFTTT.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.lnkLblIFTTT_LinkClicked);
             // 
             // groupBox2
             // 
@@ -188,6 +190,7 @@ namespace BulkSMS_IFTTT
             this.Controls.Add(this.groupBox2);
             this.Controls.Add(this.btnEdit);
             this.Controls.Add(this.groupBox1);
+            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.MaximizeBox = false;
             this.Name = "Configure";
             this.Text = "Configure";
