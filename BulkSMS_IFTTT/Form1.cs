@@ -19,9 +19,9 @@ namespace BulkSMS_IFTTT
     {
         public string sConnectionString;
         static readonly string textFile = AppDomain.CurrentDomain.BaseDirectory + @"\Config.txt";
-        string sFilename = string.Empty;
-        string sEventName = string.Empty;
-        string sKey = string.Empty;
+        public string sFilename = string.Empty;
+        public string sEventName = string.Empty;
+        public string sKey = string.Empty;
         CheckBox headerCheckBox = new CheckBox();
         private static readonly HttpClient client = new HttpClient();
         decimal ProgressBarMax = 0;
@@ -33,7 +33,7 @@ namespace BulkSMS_IFTTT
         private void configureToolStripMenuItem_Click(object sender, EventArgs e)
         {
             Configure configureWindow = new Configure();
-            configureWindow.ShowDialog();
+            configureWindow.ShowDialog(this);
         }
 
         private void exitToolStripMenuItem_Click(object sender, EventArgs e)
@@ -43,36 +43,50 @@ namespace BulkSMS_IFTTT
 
         private void Form1_Load(object sender, EventArgs e)
         {
-            string[] keys;
+          
             if (File.Exists(textFile))
             {
-                // Read entire text file content in one string    
-                string text = File.ReadAllText(textFile);
-                if (text != "")
-                {
-                    keys = text.Split(';');
-                    if (keys.Length == 0)
-                    {
-                        Configure configure = new Configure();
-                        configure.ShowDialog();
-                        FillExcelData();
-                    }
-                    else
-                    {
-                        sFilename = keys[1];
-                        sEventName = keys[0];
-                        sKey = keys[2];
-                        FillExcelData();
-                    }
-                }
-
+                // Read config file   
+                ReadConfigFile(textFile);
             }
             else
             {
                 Configure configure = new Configure();
                 configure.ShowDialog();
-                FillExcelData();
+                ReadConfigFile(textFile);
             }
+        }
+
+        private void ReadConfigFile(string textFile)
+        {
+            string[] keys;
+            string text = string.Empty;
+
+            if (File.Exists(textFile))
+            {
+                text = File.ReadAllText(textFile);
+            }
+            
+            if (text != "")
+            {
+                keys = text.Split(';');
+                if (keys.Length != 3)
+                {
+                    MessageBox.Show("Looks like the Configuration is corrupted. Please select File->Configure to rectify");
+                }
+                else
+                {
+                    sFilename = keys[1];
+                    sEventName = keys[0];
+                    sKey = keys[2];
+                    FillExcelData();
+                }
+            }
+            else
+            {
+                MessageBox.Show("Looks like the Configuration is corrupted. Please select File->Configure to rectify");
+            }
+
         }
 
         private void FillData()
@@ -111,7 +125,7 @@ namespace BulkSMS_IFTTT
             }
         }
 
-        private void FillExcelData()
+        public void FillExcelData()
         {
             using (var stream = File.Open(sFilename, FileMode.Open, FileAccess.Read))
             {
@@ -174,8 +188,30 @@ namespace BulkSMS_IFTTT
                         ProgressBarMax += 1;
                     }
                 }
-                //MessageProgress.Maximum = ProgressBarMax;
-                sendSMSAsync();
+                if (ProgressBarMax == 0)
+                {
+                    MessageBox.Show("No Contacts selected...?", "Confirmation", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                }
+                else
+                {
+                    DialogResult result;
+                    result = MessageBox.Show("Are you sure you want to send?", "Confirmation", MessageBoxButtons.YesNo, MessageBoxIcon.Question); if (result == DialogResult.No)
+                    {
+                        return;
+                    }
+                    if (result == DialogResult.Yes)
+                    {
+                        try
+                        {
+                            //MessageProgress.Maximum = ProgressBarMax;
+                            _ = sendSMSAsync();
+                        }
+                        catch (Exception ex)
+                        {
+                            MessageBox.Show("Oops... Something went wrong..!", "Failed", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        }
+                    }
+                }
             }
             else
             {
@@ -184,7 +220,7 @@ namespace BulkSMS_IFTTT
             
         }
 
-        private void sendSMSAsync()
+        private async Task sendSMSAsync()
         {
             
             decimal success = 0;
@@ -193,6 +229,11 @@ namespace BulkSMS_IFTTT
             {
                 if (Convert.ToBoolean(row.Cells["checkBoxColumn"].EditedFormattedValue) == true)
                 {
+                    success += 1;
+                    decimal v = Math.Abs(success / ProgressBarMax);
+                    MessageProgress.Value = Convert.ToInt32(v * 100);
+                    lblstatus.Text = "Sending.... " + success.ToString() + " / " + ProgressBarMax.ToString();
+
                     DataGridViewCheckBoxCell checkBox = (row.Cells["checkBoxColumn"] as DataGridViewCheckBoxCell);
 
                     string strName = row.Cells[1].EditedFormattedValue.ToString();
@@ -216,16 +257,10 @@ namespace BulkSMS_IFTTT
 
                     var responseString = new StreamReader(response.GetResponseStream()).ReadToEnd();
 
-                    postData = "";
-
-                    success += 1;
-                    
-                    decimal v = Math.Abs(success / ProgressBarMax);
-                    MessageProgress.Value = Convert.ToInt32(v * 100);
-                    lblstatus.Text = success.ToString() +" / " + ProgressBarMax.ToString();
                     checkBox.Value = false;
                     headerCheckBox.Checked = false;
-                    
+
+                    await Task.Delay(2000);
                 }
                
             }
@@ -233,6 +268,8 @@ namespace BulkSMS_IFTTT
             MessageBox.Show("Messages Successfully Sent.!!!");
             txtMessage.Text = "";
             ProgressBarMax = 0;
+            lblstatus.Text = "0/0";
+            MessageProgress.Value = 0;
         }
 
         private void HeaderCheckBox_Clicked(object sender, EventArgs e)
@@ -265,6 +302,11 @@ namespace BulkSMS_IFTTT
                 }
                 headerCheckBox.Checked = isChecked;
             }
+        }
+
+        private void btnReset_Click(object sender, EventArgs e)
+        {
+            txtMessage.Text = "";
         }
     }
 }

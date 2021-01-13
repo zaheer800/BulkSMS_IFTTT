@@ -31,18 +31,18 @@ namespace BulkSMS_IFTTT
         {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Configure));
             this.groupBox1 = new System.Windows.Forms.GroupBox();
-            this.label1 = new System.Windows.Forms.Label();
-            this.txtMakerKey = new System.Windows.Forms.TextBox();
-            this.label2 = new System.Windows.Forms.Label();
+            this.lnkLblIFTTT = new System.Windows.Forms.LinkLabel();
             this.txtEventName = new System.Windows.Forms.TextBox();
+            this.label2 = new System.Windows.Forms.Label();
+            this.txtMakerKey = new System.Windows.Forms.TextBox();
+            this.label1 = new System.Windows.Forms.Label();
             this.btnEdit = new System.Windows.Forms.Button();
             this.btnSave = new System.Windows.Forms.Button();
-            this.lnkLblIFTTT = new System.Windows.Forms.LinkLabel();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
-            this.label3 = new System.Windows.Forms.Label();
-            this.txtFileName = new System.Windows.Forms.TextBox();
-            this.openContactFile = new System.Windows.Forms.OpenFileDialog();
             this.btnFileExplorer = new System.Windows.Forms.Button();
+            this.txtFileName = new System.Windows.Forms.TextBox();
+            this.label3 = new System.Windows.Forms.Label();
+            this.openContactFile = new System.Windows.Forms.OpenFileDialog();
             this.btnClose = new System.Windows.Forms.Button();
             this.groupBox1.SuspendLayout();
             this.groupBox2.SuspendLayout();
@@ -62,22 +62,23 @@ namespace BulkSMS_IFTTT
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "IFTTT Settings";
             // 
-            // label1
+            // lnkLblIFTTT
             // 
-            this.label1.AutoSize = true;
-            this.label1.Font = new System.Drawing.Font("Microsoft Sans Serif", 7.8F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label1.Location = new System.Drawing.Point(16, 34);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(137, 17);
-            this.label1.TabIndex = 0;
-            this.label1.Text = "IFTTT Maker Key:";
+            this.lnkLblIFTTT.AutoSize = true;
+            this.lnkLblIFTTT.Location = new System.Drawing.Point(432, 80);
+            this.lnkLblIFTTT.Name = "lnkLblIFTTT";
+            this.lnkLblIFTTT.Size = new System.Drawing.Size(46, 17);
+            this.lnkLblIFTTT.TabIndex = 5;
+            this.lnkLblIFTTT.TabStop = true;
+            this.lnkLblIFTTT.Text = "IFTTT";
+            this.lnkLblIFTTT.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.lnkLblIFTTT_LinkClicked);
             // 
-            // txtMakerKey
+            // txtEventName
             // 
-            this.txtMakerKey.Location = new System.Drawing.Point(170, 34);
-            this.txtMakerKey.Name = "txtMakerKey";
-            this.txtMakerKey.Size = new System.Drawing.Size(308, 22);
-            this.txtMakerKey.TabIndex = 1;
+            this.txtEventName.Location = new System.Drawing.Point(170, 72);
+            this.txtEventName.Name = "txtEventName";
+            this.txtEventName.Size = new System.Drawing.Size(139, 22);
+            this.txtEventName.TabIndex = 1;
             // 
             // label2
             // 
@@ -89,12 +90,22 @@ namespace BulkSMS_IFTTT
             this.label2.TabIndex = 2;
             this.label2.Text = "IFTTT Event Name:";
             // 
-            // txtEventName
+            // txtMakerKey
             // 
-            this.txtEventName.Location = new System.Drawing.Point(170, 77);
-            this.txtEventName.Name = "txtEventName";
-            this.txtEventName.Size = new System.Drawing.Size(139, 22);
-            this.txtEventName.TabIndex = 1;
+            this.txtMakerKey.Location = new System.Drawing.Point(170, 34);
+            this.txtMakerKey.Name = "txtMakerKey";
+            this.txtMakerKey.Size = new System.Drawing.Size(308, 22);
+            this.txtMakerKey.TabIndex = 1;
+            // 
+            // label1
+            // 
+            this.label1.AutoSize = true;
+            this.label1.Font = new System.Drawing.Font("Microsoft Sans Serif", 7.8F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label1.Location = new System.Drawing.Point(16, 34);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(137, 17);
+            this.label1.TabIndex = 0;
+            this.label1.Text = "IFTTT Maker Key:";
             // 
             // btnEdit
             // 
@@ -116,17 +127,6 @@ namespace BulkSMS_IFTTT
             this.btnSave.UseVisualStyleBackColor = true;
             this.btnSave.Click += new System.EventHandler(this.btnSave_Click);
             // 
-            // lnkLblIFTTT
-            // 
-            this.lnkLblIFTTT.AutoSize = true;
-            this.lnkLblIFTTT.Location = new System.Drawing.Point(432, 80);
-            this.lnkLblIFTTT.Name = "lnkLblIFTTT";
-            this.lnkLblIFTTT.Size = new System.Drawing.Size(46, 17);
-            this.lnkLblIFTTT.TabIndex = 5;
-            this.lnkLblIFTTT.TabStop = true;
-            this.lnkLblIFTTT.Text = "IFTTT";
-            this.lnkLblIFTTT.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.lnkLblIFTTT_LinkClicked);
-            // 
             // groupBox2
             // 
             this.groupBox2.Controls.Add(this.btnFileExplorer);
@@ -139,6 +139,23 @@ namespace BulkSMS_IFTTT
             this.groupBox2.TabStop = false;
             this.groupBox2.Text = "Contacts File";
             // 
+            // btnFileExplorer
+            // 
+            this.btnFileExplorer.Location = new System.Drawing.Point(485, 32);
+            this.btnFileExplorer.Name = "btnFileExplorer";
+            this.btnFileExplorer.Size = new System.Drawing.Size(42, 23);
+            this.btnFileExplorer.TabIndex = 2;
+            this.btnFileExplorer.Text = "...";
+            this.btnFileExplorer.UseVisualStyleBackColor = true;
+            this.btnFileExplorer.Click += new System.EventHandler(this.btnFileExplorer_Click);
+            // 
+            // txtFileName
+            // 
+            this.txtFileName.Location = new System.Drawing.Point(108, 32);
+            this.txtFileName.Name = "txtFileName";
+            this.txtFileName.Size = new System.Drawing.Size(370, 22);
+            this.txtFileName.TabIndex = 1;
+            // 
             // label3
             // 
             this.label3.AutoSize = true;
@@ -149,26 +166,9 @@ namespace BulkSMS_IFTTT
             this.label3.TabIndex = 0;
             this.label3.Text = "File Name:";
             // 
-            // txtFileName
-            // 
-            this.txtFileName.Location = new System.Drawing.Point(108, 32);
-            this.txtFileName.Name = "txtFileName";
-            this.txtFileName.Size = new System.Drawing.Size(370, 22);
-            this.txtFileName.TabIndex = 1;
-            // 
             // openContactFile
             // 
             this.openContactFile.FileName = "openFileDialog1";
-            // 
-            // btnFileExplorer
-            // 
-            this.btnFileExplorer.Location = new System.Drawing.Point(485, 32);
-            this.btnFileExplorer.Name = "btnFileExplorer";
-            this.btnFileExplorer.Size = new System.Drawing.Size(42, 23);
-            this.btnFileExplorer.TabIndex = 2;
-            this.btnFileExplorer.Text = "...";
-            this.btnFileExplorer.UseVisualStyleBackColor = true;
-            this.btnFileExplorer.Click += new System.EventHandler(this.btnFileExplorer_Click);
             // 
             // btnClose
             // 

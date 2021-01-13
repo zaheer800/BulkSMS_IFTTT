@@ -57,8 +57,7 @@ namespace BulkSMS_IFTTT
         private void btnSave_Click(object sender, EventArgs e)
         {
             SaveEvent();
-            EnableDisableControls(false);
-            MessageBox.Show("Configurations Saved Successfully", "Confirmation", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            
         }
         public void SaveEvent()
         {
@@ -71,9 +70,13 @@ namespace BulkSMS_IFTTT
             {
                 try
                 {
-                    if (txtEventName.Text != null && txtFileName.Text != null && txtMakerKey.Text != null)
+                    if (txtEventName.Text != "" && txtFileName.Text != "" && txtMakerKey.Text != "")
                     {
                         saveFile(txtEventName.Text, txtFileName.Text, txtMakerKey.Text);
+                    }
+                    else
+                    {
+                        MessageBox.Show("All the fields are mandatory", "Configuration", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
                     }
                 }
                 catch (Exception err)
@@ -93,6 +96,8 @@ namespace BulkSMS_IFTTT
             m_WriterParameter.Write(Msg);
             m_WriterParameter.Flush();
             m_WriterParameter.Close();
+            EnableDisableControls(false);
+            MessageBox.Show("Configurations Saved Successfully", "Confirmation", MessageBoxButtons.OK, MessageBoxIcon.Information);
         }
 
         private void Configure_Load(object sender, EventArgs e)
@@ -143,6 +148,10 @@ namespace BulkSMS_IFTTT
         private void btnClose_Click(object sender, EventArgs e)
         {
             this.Close();
+            if (File.Exists(textFile))
+            {
+                ReadConfigFile(textFile);
+            }
         }
 
         private void lnkLblIFTTT_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
@@ -150,5 +159,39 @@ namespace BulkSMS_IFTTT
             ProcessStartInfo sInfo = new ProcessStartInfo("https://ifttt.com/");
             Process.Start(sInfo);
         }
+
+        private void ReadConfigFile(string textFile)
+        {
+            string[] keys;
+            string text = string.Empty;
+            Form1 f = new Form1();
+
+            if (File.Exists(textFile))
+            {
+                text = File.ReadAllText(textFile);
+            }
+
+            if (text != "")
+            {
+                keys = text.Split(';');
+                if (keys.Length != 3)
+                {
+                    MessageBox.Show("Looks like the Configuration is corrupted");
+                }
+                else
+                {
+                    f.sFilename = keys[1];
+                    f.sEventName = keys[0];
+                    f.sKey = keys[2];
+                    f.FillExcelData();
+                }
+            }
+            else
+            {
+                MessageBox.Show("Invalid Configuration");
+            }
+
+        }
+
     }
 }
